@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/")
 public class MyController {
 
-    private Map<Long, byte[]> photos = new HashMap<Long, byte[]>();
+    private Map<Long, byte[]> photos = new HashMap<>();
 
     @RequestMapping("/")
     public String onIndex() {
@@ -53,22 +53,44 @@ public class MyController {
         return photoById(id);
     }
 
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String onList(Model model) {
+
+        model.addAttribute("photos", photos);
+
+        return "list";
+    }
+
     @RequestMapping("/delete/{photo_id}")
     public String onDelete(@PathVariable("photo_id") long id) {
-        if (photos.remove(id) == null)
-            throw new PhotoNotFoundException();
-        else
+        if (photos.remove(id) != null) {
             return "index";
+        }
+
+        throw new PhotoNotFoundException();
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    public String onCheckboxDelete(@RequestParam("list_item") long[] itemsId, Model model) {
+            for (long id : itemsId) {
+                photos.remove(id);
+        }
+
+        model.addAttribute("photos", photos);
+
+        return "list";
     }
 
     private ResponseEntity<byte[]> photoById(long id) {
         byte[] bytes = photos.get(id);
-        if (bytes == null)
-            throw new PhotoNotFoundException();
+        if (bytes != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_PNG);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
+            return new ResponseEntity<byte[]>(bytes, headers, HttpStatus.OK);
+        }
 
-        return new ResponseEntity<byte[]>(bytes, headers, HttpStatus.OK);
+        throw new PhotoNotFoundException();
     }
+
 }
