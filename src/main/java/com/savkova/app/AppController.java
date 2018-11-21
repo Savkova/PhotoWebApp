@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/")
-public class MyController {
+public class AppController {
 
     private Map<Long, byte[]> photos = new HashMap<>();
 
@@ -71,14 +71,13 @@ public class MyController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public String onCheckboxDelete(@RequestParam("list_item") long[] itemsId, Model model) {
+    public ResponseEntity<Void> onCheckboxDelete(@RequestParam(value = "items_id[]", required = false) long[] itemsId) {
+        if (itemsId != null && itemsId.length > 0)
             for (long id : itemsId) {
                 photos.remove(id);
-        }
+            }
 
-        model.addAttribute("photos", photos);
-
-        return "list";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private ResponseEntity<byte[]> photoById(long id) {
