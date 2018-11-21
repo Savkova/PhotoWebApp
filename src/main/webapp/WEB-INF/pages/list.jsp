@@ -11,24 +11,28 @@
 <div align="center">
     <h2>Photo Album</h2>
 
-    <c:if test="${not empty photos}">
-        <table border="0">
-            <c:forEach var="photo" items="${photos}">
-                <tr>
-                    <td><input type="checkbox" name="items_id[]" value="${photo.key}" id="checkbox_${photo.key}"/></td>
-                    <td><a href="${root}/photo/<c:out value="${photo.key}"></c:out>">
-                        <c:out value="${photo.key}"></c:out>
-                    </a></td>
-                    <td><img src="${root}/photo/<c:out value="${photo.key}"></c:out>" height="50"></td>
-                </tr>
-            </c:forEach>
-        </table>
-        <p>
+    <c:choose>
+        <c:when test="${not empty photos}">
+            <table border="0">
+                <c:forEach var="photo" items="${photos}">
+                    <tr>
+                        <td><input type="checkbox" name="items_id[]" value="${photo.key}" id="checkbox_${photo.key}"/>
+                        </td>
+                        <td><a href="${root}/photo/${photo.key}">${photo.key}</a></td>
+                        <td><img src="${root}/photo/${photo.key}" height="50"></td>
+                    </tr>
+                </c:forEach>
+            </table>
+            <p>
+                <input type="submit" value="Home" onclick="window.location='${root}/';"/>
+                <button type="button" id="download_button">Download</button>
+                <button type="button" id="delete_button">Delete</button>
+            </p>
+        </c:when>
+        <c:otherwise>
             <input type="submit" value="Home" onclick="window.location='${root}/';"/>
-            <button type="button" id="download_button">Download</button>
-            <button type="button" id="delete_button">Delete</button>
-        </p>
-    </c:if>
+        </c:otherwise>
+    </c:choose>
 
 </div>
 
