@@ -15,7 +15,6 @@ public class WebInitializer implements WebApplicationInitializer{
         // Load Spring web application configuration
         AnnotationConfigWebApplicationContext cxt = new AnnotationConfigWebApplicationContext();
         cxt.register(AppConfig.class);
-//        cxt.refresh();
         cxt.setServletContext(servletCxt);
 
         // Create and register the DispatcherServlet
