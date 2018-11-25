@@ -34,6 +34,8 @@
         </c:otherwise>
     </c:choose>
 
+    <a id="download_zip_link" target=_blank hidden="hidden"></a>
+
 </div>
 
 <script>
@@ -42,9 +44,21 @@
         $(':checked').each(function () {
             items['items_id[]'].push($(this).val());
         });
-        $.post("${root}/list", items, function (data, status) {
+        $.post("${root}/list/delete", items, function () {
             window.location.reload();
         });
+    });
+
+    $('#download_button').click(function () {
+        var items = {'items_id[]': []};
+        $(':checked').each(function () {
+            items['items_id[]'].push($(this).val());
+        });
+
+        var link = $('#download_zip_link');
+        link.href = window.document.location.href +"/download?" + jQuery.param(items);
+
+        window.location = link.href;
     });
 </script>
 
